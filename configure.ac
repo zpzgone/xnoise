@@ -45,7 +45,7 @@ LIBXML_REQUIRED=2.6.32
 LIBSOUP_REQUIRED=2.26.0
 UBUNTUONEUI_REQUIRED=3.0
 
-VALA_REQUIRED=0.16.0
+VALA_REQUIRED=0.18.0
 
 
 AC_PROG_CC
@@ -426,6 +426,8 @@ XNOISE_PACKAGES="\
     --pkg gstreamer-1.0 \
     --pkg gstreamer-pbutils-1.0 \
     --pkg gstreamer-tag-1.0 \
+    --pkg gstreamer-video-1.0 \
+    --pkg gstreamer-base-1.0 \
     --pkg gtk+-3.0 \
     --pkg posix \
     --pkg sqlite3 \
