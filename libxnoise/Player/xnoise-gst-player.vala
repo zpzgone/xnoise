@@ -387,16 +387,13 @@ public class Xnoise.GstPlayer : GLib.Object {
     }
 
     private Gdk.Pixbuf? extract_embedded_image(Gst.TagList taglist) {
-//        Gst.Buffer gst_buffer;
         Gst.Sample sample2 = null;
         Gdk.PixbufLoader pbloader;
         Gdk.Pixbuf? pixbuf = null;
         Gst.Sample sample;
         Gst.MapInfo mapinfo;
         uint i = 0;
-//        GLib.Value? vl;
         for(;;i++) {
-//            GLib.Value? val;
             string media_type;
             Gst.Structure cstruct;
             int imgtype;
@@ -824,31 +821,31 @@ public class Xnoise.GstPlayer : GLib.Object {
         //print("in is_missing_plugins_error?\n");
         bool retval = false;
         //TODO !!!
-//        Error err = null;
-//        string debug;
-//        
-//        if(missing_plugins == null) {
-//            //print("messages is null and therefore no missing_plugin message\n");
-//            return false;
-//        }
-//        msg.parse_error(out err, out debug);
-//        
-//        //print("err.code: %d\n",(int)err.code);
-//        
-//        if(err is Gst.CoreError && (Gst.StreamError) err == Gst.StreamError.CODEC_NOT_FOUND) {
-//            //print("is missing plgins error \n");
-//            Idle.add(() => {
-//                userinfo.popup(UserInfo.RemovalType.CLOSE_BUTTON,
-//                               UserInfo.ContentClass.WARNING,
-//                               "Missing plugins error",
-//                               true,
-//                               5,
-//                               null);
-//                return false;
-//            });
-//            print("sign_missing_plugins!!!!\n");
-//            stop();
-//        }
+        GLib.Error err = null;
+        string debug;
+        
+        if(missing_plugins == null) {
+            //print("messages is null and therefore no missing_plugin message\n");
+            return false;
+        }
+        msg.parse_error(out err, out debug);
+        
+        //print("err.code: %d\n",(int)err.code);
+        
+        if(err is Gst.StreamError.CODEC_NOT_FOUND) {//.matches(Gst.StreamError.quark(), (int)Gst.StreamError.CODEC_NOT_FOUND)) { //err.domain == Gst.StreamError.quark() && err.code == Gst.StreamError.CODEC_NOT_FOUND) {
+            print("...is missing plgins error \n");
+            Idle.add(() => {
+                userinfo.popup(UserInfo.RemovalType.CLOSE_BUTTON,
+                               UserInfo.ContentClass.WARNING,
+                               "Missing plugins error",
+                               true,
+                               5,
+                               null);
+                return false;
+            });
+            print("sign_missing_plugins!!!!\n");
+            stop();
+        }
         return retval;
     }
     
