@@ -92,31 +92,31 @@ private class Xnoise.GstEqualizer : GLib.Object, IParams {
     public new double get(int idx) {
         double gain = 0.0;
         //TODO
-//        Gst.Object bandgain =
-//            ((Gst.ChildProxy)eq).get_child_by_name("band%d".printf(idx));
-//        
-//        bandgain.get("gain", out gain);
-//        
-//        if(gain >= 0) { // map to the allowed range from -100% to 100% (-24 dB to 12 dB)
-//            gain /= 0.12;
-//        }
-//        else {
-//            gain /= 0.24;
-//        }
+        GLib.Object bandgain =
+            ((Gst.ChildProxy)eq).get_child_by_name("band%d".printf(idx));
+        
+        bandgain.get("gain", out gain);
+        
+        if(gain >= 0) { // map to the allowed range from -100% to 100% (-24 dB to 12 dB)
+            gain /= 0.12;
+        }
+        else {
+            gain /= 0.24;
+        }
         return gain;
     }
 
     public new void set(int idx, double gain) {
-//        Gst.Object bandgain = TODO
-//            ((Gst.ChildProxy)eq).get_child_by_name("band%d".printf(idx));
-//        
-//        if(gain >= 0) { // map to the allowed rnge from -24 dB to 12 dB
-//            gain *= 0.12;
-//        }
-//        else {
-//            gain *= 0.24;
-//        }
-//        bandgain.set("gain", gain);
+        GLib.Object bandgain =
+            ((Gst.ChildProxy)eq).get_child_by_name("band%d".printf(idx));
+        
+        if(gain >= 0) { // map to the allowed rnge from -24 dB to 12 dB
+            gain *= 0.12;
+        }
+        else {
+            gain *= 0.24;
+        }
+        bandgain.set("gain", gain);
     }
     
     public void get_frequencies(out int[] freqs) {
