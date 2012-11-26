@@ -388,63 +388,60 @@ public class Xnoise.GstPlayer : GLib.Object {
 
     private Gdk.Pixbuf? extract_embedded_image(Gst.TagList taglist) {
 //        Gst.Buffer gst_buffer;
-        Gst.Sample sample;
+        Gst.Sample sample2 = null;
         Gdk.PixbufLoader pbloader;
         Gdk.Pixbuf? pixbuf = null;
-//        Gst.Sample sample;
-//        Gst.MapInfo mapinfo;
-//        uint i = 0;
+        Gst.Sample sample;
+        Gst.MapInfo mapinfo;
+        uint i = 0;
 //        GLib.Value? vl;
-//        for(;;i++) {
+        for(;;i++) {
 //            GLib.Value? val;
-////            Gst.Sample value;
-//            string media_type;
-//            Gst.Structure cstruct;
-//            int imgtype;
-//            val = taglist.get_sample_index(Gst.Tags.IMAGE, i);
-//            if(val == null)
-//                break;
-//            
-//            sample = val.get_sample();
-//            if(sample == null)
-//                continue;
-//            
-//            caps = sample.get_caps();
-//            cstruct = caps.get_structure(0);
-//            media_type = cstruct.get_name();
-//            
-//            if(media_type == "text/uri-list")
-//                continue;
-//            
-//            cstruct.get_int("image-type", out imgtype); // get_enum doesn't work with vala
-//            //cstruct.get_enum("image-type", typeof(Gst.TagImageType), out imgtype);
-//            if(imgtype == 0) {      // UNDEFINED
-//                val = gstvalue;
-//            }
-//            else if(imgtype == 1) { //FRONT_COVER
-//                print("FRONT_COVER\n");
-//                vl = val;
-//            }
-//        }
-//        if(vl == null)
-//            return null;
-//        
-//        pbloader = new Gdk.PixbufLoader();
-////        gst_buffer = val.get_buffer();
-//        
-//        sample = ((Gst.Value)vl).get_sample();
-//        sample.get_buffer().map (out mapinfo, MapFlags.READ);
-//        
-//        try {
-//            if(pbloader.write(mapinfo.data) == false);
-//        }
-//        catch(Error e) {
-//            try { pbloader.close(); } catch(Error e) {}
-//            return null;
-//        }
-//        pixbuf = pbloader.get_pixbuf();
-//        try { pbloader.close(); } catch(Error e) {}
+            string media_type;
+            Gst.Structure cstruct;
+            int imgtype;
+            taglist.get_sample_index(Gst.Tags.IMAGE, i, out sample);
+            if(sample == null)
+                break;
+            
+            if(sample == null)
+                continue;
+            
+            var caps = sample.get_caps();
+            cstruct = caps.get_structure(0);
+            media_type = cstruct.get_name();
+            
+            if(media_type == "text/uri-list")
+                continue;
+            
+            cstruct.get_int("image-type", out imgtype); // get_enum doesn't work with vala
+            //cstruct.get_enum("image-type", typeof(Gst.TagImageType), out imgtype);
+            if(imgtype == 0) {      // UNDEFINED
+                if(sample2 == null)
+                    sample2 = sample;
+            }
+            else if(imgtype == 1) { //FRONT_COVER
+                print("FRONT_COVER\n");
+                sample2 = sample;
+            }
+        }
+        if(sample2 == null)
+            return null;
         
+        pbloader = new Gdk.PixbufLoader();
+        
+        sample2.get_buffer().map (out mapinfo, MapFlags.READ);
+        
+        try {
+            if(pbloader.write(mapinfo.data) == false);
+        }
+        catch(Error e) {
+            try { pbloader.close(); } catch(Error e) {}
+            return null;
+        }
+        pixbuf = pbloader.get_pixbuf();
+        try { pbloader.close(); } catch(Error e) {}
+        print("extracted image\n");
         return pixbuf;
     }
 
