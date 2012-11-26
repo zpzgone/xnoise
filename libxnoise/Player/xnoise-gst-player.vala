@@ -532,7 +532,13 @@ public class Xnoise.GstPlayer : GLib.Object {
             asink
         );
 print("##1\n");
-        abin.add_pad(new GhostPad("sink", tee.get_static_pad("sink")));
+        var tsink = tee.get_static_pad("sink");
+        if(tsink == null)
+            print("tsink is null\n");
+        var gp = new GhostPad("sink", tsink);
+        if(gp == null)
+            print("gp is null\n");
+        abin.add_pad(gp);
 print("##2\n");
         
         if(equalizer.eq == null || !equalizer.available) {
@@ -548,8 +554,12 @@ print("##3.1\n");
         bus = playbin.get_bus();
 print("##3.2\n");
         Gst.Pad sinkpad = queue.get_static_pad("sink");
+        if(sinkpad == null)
+            print("sinkpad is null\n");
 print("##3.3\n");
-        pad = tee.get_static_pad("src%d");
+        pad = tee.get_request_pad("src_%u");
+        if(pad == null)
+            print("pad is null\n");
 print("##3.4\n");
         tee.set("alloc-pad", pad);
 print("##3.5\n");
