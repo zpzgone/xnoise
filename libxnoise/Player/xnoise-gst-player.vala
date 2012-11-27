@@ -75,7 +75,8 @@ public class Xnoise.GstPlayer : GLib.Object {
     private class TaglistWithStreamType {
         public TaglistWithStreamType(PlaybinStreamType _pst, TagList _tags) {
             this.pst = _pst; 
-            this.tags = _tags;//.copy(); TODO
+            this.tags = new TagList.empty();
+            this.tags = this.tags.merge(_tags, TagMergeMode.REPLACE);
         }
         public PlaybinStreamType pst;
         public TagList tags;
@@ -617,8 +618,10 @@ public class Xnoise.GstPlayer : GLib.Object {
         TaglistWithStreamType? tlwst;
         while((tlwst = this.new_tag_queue.try_pop()) != null) {
             // merge with taglist_buffer. taglist_buffer is set to null as soon as new uri is set
-            if(taglist_buffer == null) 
-                taglist_buffer = tlwst.tags;//.copy(); TODO
+            if(taglist_buffer == null) {
+                taglist_buffer = new TagList.empty();
+                taglist_buffer = taglist_buffer.merge(tlwst.tags, TagMergeMode.REPLACE);
+            }
             else
                 taglist_buffer = taglist_buffer.merge(tlwst.tags, TagMergeMode.REPLACE);
             taglist_buffer.@foreach(foreachtag);
