@@ -541,7 +541,7 @@ public class Xnoise.GstPlayer : GLib.Object {
         pad = tee.get_request_pad("src_%u");
         tee.set("alloc-pad", pad);
         pad.link(sinkpad);
-
+        
         playbin.text_changed.connect(() => {
             //print("text_changed\n");
             Timeout.add_seconds(1,() => {
@@ -911,13 +911,11 @@ public class Xnoise.GstPlayer : GLib.Object {
     private void on_sync_message(Gst.Message msg) {
         if((msg == null)||(msg.get_structure() == null)) 
             return;
-        string message_name = msg.get_structure().get_name();
-        //print("%s\n", message_name);
-        if(message_name=="prepare-xwindow-id") {
-            var imagesink =(Gst.Video.Overlay)(msg.src);
-            imagesink.set_property("force-aspect-ratio", true);
-            imagesink.set_window_handle((uint*)(Gdk.X11Window.get_xid(videoscreen.get_window())));
-        }
+        if(!Gst.Video.is_video_overlay_prepare_window_handle_message(msg))
+            return;
+        var imagesink =(Gst.Video.Overlay)(msg.src);
+        imagesink.set_property("force-aspect-ratio", true);
+        imagesink.set_window_handle((uint*)(Gdk.X11Window.get_xid(videoscreen.get_window())));
     }
 
     private void foreachtag(TagList list, string tag) {
